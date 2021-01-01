@@ -1,4 +1,4 @@
-# xGetter => LowCostVideo [3.0]
+# xGetter => LowCostVideo [3.0] [FIX ATTEMPT 1]
 I change something to comply with Google play policy.
 - Remove external javascript file
 - Change the class name to LowCostVideo
@@ -73,14 +73,14 @@ I change something to comply with Google play policy.
   
 
     dependencies {  
-    	implementation 'com.github.KhunHtetzNaing:xGetter:3.0'
+	implementation 'com.github.eme22:xGetter:3.0fix'
     }
 
 **Android Studio** သမားတွေဆိုရင်တော့ **Sync Now** လုပ်ပေးပါ။  
 **AIDE** သမားဆိုရင်တော့ **Save** ပြီး **Download** လုပ်ခိုင်းရင်လုပ်ပေးပါ။  
 **မှတ်ချက်။ ။အင်တာနက်ဖွင့်ထားဖို့လိုပါမယ်**  
   
-  If not working [download this jar](https://github.com/KhunHtetzNaing/xGetter/raw/master/app/release/xgetter.jar) file and put to **YourProject/app/libs/**
+  If not working NO JAR PROVIDED file and put to **YourProject/app/libs/**
   
 **AndroidManifest.xml** ထဲမှာ  
   
