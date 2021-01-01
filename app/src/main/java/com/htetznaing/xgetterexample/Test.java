@@ -12,7 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Test {
-    public static void main(String zz[]){
+    public static void main(String[] zz){
 //
 //        try {
 //            Document document = Jsoup.connect("https://photos.google.com/share/AF1QipMkSCF43RzZEXWyGNMYWHCegzCgdW5ao_qJEBVZ8SPkS2IQmHZFz4a13PfAZGgvUQ/photo/AF1QipNnj95SaWHJca-Q8rUxzuRkYxX6UmnDSVykJhhw?key=dGhiZnl1SURYZmRhcFF0OVdueEk2TEtDWG9pb0J3").get();
@@ -47,6 +47,7 @@ public class Test {
             String convert__id = getExtra("_id: ?'(.*?)'",html);
             String convert_v_id = getExtra("v_id: ?'(.*?)'",html);
 
+            assert result != null;
             Document document = Jsoup.parse(result);
             Elements elements = document.getElementsByTag("li");
             for (Element e:elements){

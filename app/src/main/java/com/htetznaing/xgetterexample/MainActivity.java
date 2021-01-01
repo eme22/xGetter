@@ -5,11 +5,9 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ClipboardManager;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
@@ -42,9 +40,12 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 public class MainActivity extends AppCompatActivity {
     LowCostVideo xGetter;
@@ -270,13 +271,11 @@ public class MainActivity extends AppCompatActivity {
         if (text==null){
             return text;
         }
-        try {
-            byte[] data = text.getBytes("UTF-8");
-            return Base64.encodeToString(data, Base64.DEFAULT);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return null;
+        byte[] data;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT)
+            data = text.getBytes(StandardCharsets.UTF_8);
+        else data = text.getBytes(Charset.forName("UTF-8"));
+        return Base64.encodeToString(data, Base64.DEFAULT);
     }
 
     private void watchDialog(XModel xModel){
@@ -453,12 +452,7 @@ public class MainActivity extends AppCompatActivity {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle("Quality!")
-                .setItems(name, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        done(model.get(which));
-                    }
-                })
+                .setItems(name, (dialog, which) -> done(model.get(which)))
                 .setPositiveButton("OK", null);
         builder.show();
     }
@@ -486,7 +480,6 @@ public class MainActivity extends AppCompatActivity {
                 checkPermissions();
                 Toast.makeText(this, "You need to allow this permission!", Toast.LENGTH_SHORT).show();
             }
-            return;
         }
     }
 
@@ -614,6 +607,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkFileSize(XModel xModel){
+
+        try {
+            ((Callable<String>) () -> {
+                if (xModel.getUrl() != null) {
+                    try {
+                        URLConnection connection = new URL(xModel.getUrl()).openConnection();
+                        if (xModel.getCookie() != null) {
+                            connection.setRequestProperty("Cookie", xModel.getCookie());
+                        }
+                        connection.connect();
+                        String s = calculateFileSize(connection.getContentLength());
+                        System.out.println(xModel.getUrl()+" => File Size: "+s+"\nCookie => "+xModel.getCookie());
+                        Toast.makeText(MainActivity.this, "File Size: "+s, Toast.LENGTH_SHORT).show();
+                        return s;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return null;
+            }).call();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+/*
         new AsyncTask<Void,Void,String>(){
 
             @Override
@@ -640,6 +657,8 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "File Size: "+s, Toast.LENGTH_SHORT).show();
             }
         }.execute();
+
+ */
     }
 
     private String calculateFileSize(long size) {

@@ -1,56 +1,50 @@
 package com.htetznaing.xplayer
 
 import android.app.Activity
-import android.app.PictureInPictureParams
-import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
-import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.support.v4.media.session.MediaSessionCompat
 import android.view.View
-import android.widget.ImageButton
-import android.widget.ProgressBar
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
-import com.google.android.exoplayer2.source.ExtractorMediaSource
+import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.util.Util
-import kotlinx.android.synthetic.main.activity_xplayer.*
+import com.htetznaing.xplayer.databinding.ActivityXplayerBinding
 
 class XPlayer : AppCompatActivity() {
     companion object {
-        @JvmField val XPLAYER_URL = "xPlayer.URL"
-        val XPLAYER_POSITION = "xPlayer.POSITION"
-        @JvmField val XPLAYER_COOKIE = "xPlayer.COOKIE"
+        const val XPLAYER_URL = "xPlayer.URL"
+        const val XPLAYER_POSITION = "xPlayer.POSITION"
+        const val XPLAYER_COOKIE = "xPlayer.COOKIE"
     }
 
-    lateinit var mUrl: String
-    var mCookie:String = "null"
-    lateinit var player : SimpleExoPlayer
+    private lateinit var mUrl: String
+    private var mCookie:String = "null"
+    private lateinit var player : SimpleExoPlayer
     private var videoPosition:Long = 0L
+    private lateinit var binding: ActivityXplayerBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_xplayer)
+        binding = ActivityXplayerBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
         if (intent.extras == null || !intent.hasExtra(XPLAYER_URL)) {
             finish()
         }
 
-        mUrl = intent.getStringExtra(XPLAYER_URL)
+        mUrl = intent.getStringExtra(XPLAYER_URL)!!
 
         if(intent.getStringExtra(XPLAYER_COOKIE)!=null) {
-            mCookie = intent.getStringExtra(XPLAYER_COOKIE)
+            mCookie = intent.getStringExtra(XPLAYER_COOKIE)!!
         }
         savedInstanceState?.let { videoPosition = savedInstanceState.getLong(XPLAYER_POSITION) }
     }
@@ -59,9 +53,10 @@ class XPlayer : AppCompatActivity() {
         super.onStart()
 
 
-        player = ExoPlayerFactory.newSimpleInstance(this, DefaultTrackSelector())
+        player = SimpleExoPlayer.Builder(this).build()
+                //ExoPlayerFactory.newSimpleInstance(this, DefaultTrackSelector())
 
-        playerView.player = player
+        binding.playerView.player = player
 
         var dataSourceFactory = DefaultDataSourceFactory(this, Util.getUserAgent(this, applicationInfo.loadLabel(packageManager).toString()))
 
@@ -79,7 +74,8 @@ class XPlayer : AppCompatActivity() {
             }
 
             C.TYPE_OTHER -> {
-                val mediaSource = ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(mUrl))
+                val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(mUrl))
+                        //ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(mUrl))
                 player.prepare(mediaSource)
             }
 
@@ -90,12 +86,12 @@ class XPlayer : AppCompatActivity() {
             }
         }
 
-        progresbar_video_play.setVisibility(View.VISIBLE)
+        binding.progresbarVideoPlay.visibility = View.VISIBLE
 
-        var returnResultOnce:Boolean = true
+        var returnResultOnce = true
 
         player.addListener(object : Player.EventListener{
-            override fun onTimelineChanged(timeline: Timeline?, manifest: Any?, reason: Int) {}
+            override fun onTimelineChanged(timeline: Timeline, manifest: Any?, reason: Int) {}
 
             override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {}
 
@@ -105,11 +101,11 @@ class XPlayer : AppCompatActivity() {
 
             override fun onLoadingChanged(isLoading: Boolean) {}
 
-            override fun onTracksChanged(trackGroups: TrackGroupArray?, trackSelections: TrackSelectionArray?) {}
+            override fun onTracksChanged(trackGroups: TrackGroupArray, trackSelections: TrackSelectionArray) {}
 
-            override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters?) {}
+            override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters) {}
 
-            override fun onPlayerError(error: ExoPlaybackException?) {
+            override fun onPlayerError(error: ExoPlaybackException) {
                 setResult(Activity.RESULT_CANCELED)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     finishAndRemoveTask()
@@ -119,7 +115,7 @@ class XPlayer : AppCompatActivity() {
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
                 if(playbackState == Player.STATE_READY && returnResultOnce){
                     setResult(Activity.RESULT_OK)
-                    progresbar_video_play.setVisibility(View.GONE)
+                    binding.progresbarVideoPlay.visibility = View.GONE
                     returnResultOnce = false
                 }
             }
@@ -131,38 +127,38 @@ class XPlayer : AppCompatActivity() {
         //Use Media Session Connector from the EXT library to enable MediaSession Controls in PIP.
         val mediaSession = MediaSessionCompat(this, packageName)
         val mediaSessionConnector = MediaSessionConnector(mediaSession)
-        mediaSessionConnector.setPlayer(player, null)
+        mediaSessionConnector.setPlayer(player)
         mediaSession.isActive = true
     }
 
     override fun onPause() {
-        System.out.println("onPause")
+        println("onPause")
         videoPosition = player.currentPosition
         super.onPause()
     }
 
     override fun onResume() {
         super.onResume()
-        System.out.println("onResume")
+        println("onResume")
         if(videoPosition > 0L){
             player.seekTo(videoPosition)
         }
         //Makes sure that the media controls pop up on resuming and when going between PIP and non-PIP states.
         player.playWhenReady = true
-        playerView.useController = true
+        binding.playerView.useController = true
     }
 
     override fun onStop() {
         super.onStop()
-        System.out.println("onStop")
+        println("onStop")
         videoPosition = player.currentPosition
         player.playWhenReady = false
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        System.out.println("onDestroy")
-        playerView.player = null
+        println("onDestroy")
+        binding.playerView.player = null
         player.release()
         //PIPmode activity.finish() does not remove the activity from the recents stack.
         //Only finishAndRemoveTask does this.
@@ -175,16 +171,13 @@ class XPlayer : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState.apply {
-            this?.putLong(XPLAYER_POSITION, player.currentPosition)
+            this.putLong(XPLAYER_POSITION, player.currentPosition)
         })
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        videoPosition = savedInstanceState!!.getLong(XPLAYER_POSITION)
+        videoPosition = savedInstanceState.getLong(XPLAYER_POSITION)
     }
 
-    override fun onBackPressed(){
-        super.onBackPressed()
-    }
 }

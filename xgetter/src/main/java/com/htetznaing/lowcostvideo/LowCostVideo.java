@@ -1,6 +1,7 @@
 package com.htetznaing.lowcostvideo;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -45,8 +46,9 @@ import static com.htetznaing.lowcostvideo.Utils.FacebookUtils.check_fb_video;
 import static com.htetznaing.lowcostvideo.Utils.GDriveUtils.get_drive_id;
 
 public class LowCostVideo {
-    private Context context;
+    private final Context context;
     private OnTaskCompleted onComplete;
+    public static final String TAG = "LowCostVideo";
     public static final String agent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.99 Safari/537.36";
     private final String mp4upload = "https?:\\/\\/(www\\.)?(mp4upload)\\.[^\\/,^\\.]{2,}\\/.+";
     private final String filerio = "https?:\\/\\/(www\\.)?(filerio)\\.[^\\/,^\\.]{2,}\\/.+";
@@ -74,7 +76,8 @@ public class LowCostVideo {
     private final String bitTube = "https?:\\/\\/(www\\.)?(bittube\\.video\\/videos)\\/(watch|embed)\\/.+";
     private final String videoBIN = "https?:\\/\\/(www\\.)?(videobin\\.co)\\/.+";
     private final String fourShared = "https?:\\/\\/(www\\.)?(4shared\\.com)\\/(video|web\\/embed)\\/.+";
-    private final String streamtape = "https?:\\/\\/(www\\.)?(streamtape\\.com)\\/(v)\\/.+";
+    private final String streamtape = "https?:\\/\\/(www\\.)?(streamtape\\.com)\\/(?:e|v)\\/([0-9a-zA-Z]+)";
+    //private final String streamtape = "(?://|\\.)(streamtape\\.com)/(?:e|v)/([0-9a-zA-Z]+)";
     private final String vudeo = "https?:\\/\\/(www\\.)?(vudeo\\.net)\\/.+";
 
     public LowCostVideo(@NonNull Context context){
@@ -162,6 +165,8 @@ public class LowCostVideo {
     private boolean check(String regex, String string) {
         final Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         final Matcher matcher = pattern.matcher(string);
-        return matcher.find();
+        boolean m = matcher.find();
+        Log.d(TAG, String.valueOf(m));
+        return m;
     }
 }

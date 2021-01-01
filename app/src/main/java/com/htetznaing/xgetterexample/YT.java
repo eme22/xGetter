@@ -13,7 +13,7 @@ public class YT {
     static final String HD = "hd_src:\"(.*?)\"";
     static final String DASH = "dash_manifest:\"(.*?)\",";
     static final String AUDIO = "\\/><BaseURL>(.*?)<";
-    public static void main(String a[]){
+    public static void main(String[] a){
         try {
             String html = loadPage("https://web.facebook.com/iamHtetzNaing/videos/325729971610584/");
 

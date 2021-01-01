@@ -1,6 +1,8 @@
 package com.htetznaing.lowcostvideo.Sites;
 
 
+import android.util.Log;
+
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.StringRequestListener;
@@ -8,21 +10,55 @@ import com.htetznaing.lowcostvideo.LowCostVideo;
 import com.htetznaing.lowcostvideo.Model.XModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StreamTape {
 
+    private static final Map<String,String> headers = Collections.singletonMap("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.66");
+
     public static void fetch(String url, final LowCostVideo.OnTaskCompleted onTaskCompleted){
         AndroidNetworking.get(url)
+                .addHeaders(headers)
                 .build()
                 .getAsString(new StringRequestListener() {
                     @Override
                     public void onResponse(String response) {
-                        ArrayList<XModel> xModels = parseVideo(response);
-                        if (xModels.isEmpty()){
+                        response = parseURL(response);
+                        Log.d(LowCostVideo.TAG,response);
+                        ArrayList<XModel> xModels = null;
+                        if (response != null) {
+                            xModels = parseVideo(response);
+                        }
+                        else onTaskCompleted.onError();
+                        if (xModels == null || xModels.isEmpty()){
                             onTaskCompleted.onError();
                         }else onTaskCompleted.onTaskCompleted(xModels, false);
+
+                        /*
+                        AndroidNetworking.get(response)
+                                .addHeaders(headers)
+                                .addHeaders("Referer", response)
+                                .build()
+                                .getAsString(new StringRequestListener() {
+                                    @Override
+                                    public void onResponse(String response) {
+                                        Log.d(LowCostVideo.TAG,response);
+                                        ArrayList<XModel> xModels = parseVideo(response);
+                                        if (xModels == null || xModels.isEmpty()){
+                                            onTaskCompleted.onError();
+                                        }else onTaskCompleted.onTaskCompleted(xModels, false);
+                                    }
+
+                                    @Override
+                                    public void onError(ANError anError) {
+                                        onTaskCompleted.onError();
+                                    }
+                                });
+
+                         */
                     }
 
                     @Override
@@ -32,17 +68,22 @@ public class StreamTape {
                 });
     }
 
-    private static ArrayList<XModel> parseVideo(String html){
-        final String regex = "<div id=\"videolink\"(.+)>(.*?)<\\/div>";
+    private static String parseURL(String response) {
+        final String regex = "videolink['\"].+?innerHTML\\s*=\\s*['\"]([^'\"]+)";
         final Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
-        final Matcher matcher = pattern.matcher(html);
-        ArrayList<XModel> xModels = new ArrayList<>();
+        final Matcher matcher = pattern.matcher(response);
         if (matcher.find()) {
-            XModel xModel = new XModel();
-            xModel.setQuality("Normal");
-            xModel.setUrl("https:"+matcher.group(2));
-            xModels.add(xModel);
+            return  "https:"+matcher.group(1)+"&stream=1";
         }
+        else return null;
+    }
+
+    private static ArrayList<XModel> parseVideo(String real_url){
+        ArrayList<XModel> xModels = new ArrayList<>();
+        XModel xModel = new XModel();
+        xModel.setQuality("Normal");
+        xModel.setUrl(real_url);
+        xModels.add(xModel);
         return xModels;
     }
 }
