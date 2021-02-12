@@ -26,9 +26,9 @@ public class StreamTape {
                 .getAsString(new StringRequestListener() {
                     @Override
                     public void onResponse(String response) {
-                        //Log.d(LowCostVideo.TAG,response);
-                        response = parseURL(response);
                         Log.d(LowCostVideo.TAG,response);
+                        response = parseURL(response);
+                        //Log.d(LowCostVideo.TAG,response);
                         ArrayList<XModel> xModels = null;
                         if (response != null) {
                             xModels = parseVideo(response);
