@@ -26,6 +26,7 @@ public class StreamTape {
                 .getAsString(new StringRequestListener() {
                     @Override
                     public void onResponse(String response) {
+                        //Log.d(LowCostVideo.TAG,response);
                         response = parseURL(response);
                         Log.d(LowCostVideo.TAG,response);
                         ArrayList<XModel> xModels = null;
@@ -74,6 +75,16 @@ public class StreamTape {
         final Matcher matcher = pattern.matcher(response);
         if (matcher.find()) {
             return  "https:"+matcher.group(1)+"&stream=1";
+        }
+        else return parseURL2(response);
+    }
+
+    private static String parseURL2(String response) {
+        final String regex = "'vid'\\+'eolink'.*?'.*?(get_video.*?)'";
+        final Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
+        final Matcher matcher = pattern.matcher(response);
+        if (matcher.find()) {
+            return  "https://streamtape.com/"+matcher.group(1)+"&stream=1";
         }
         else return null;
     }
