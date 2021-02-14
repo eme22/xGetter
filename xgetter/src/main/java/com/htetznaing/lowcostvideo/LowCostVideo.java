@@ -20,6 +20,7 @@ import com.htetznaing.lowcostvideo.Sites.GoUnlimited;
 import com.htetznaing.lowcostvideo.Sites.Muvix;
 import com.htetznaing.lowcostvideo.Sites.VideoBM;
 import com.htetznaing.lowcostvideo.Sites.Vudeo;
+import com.htetznaing.lowcostvideo.Sites.Zippy;
 import com.htetznaing.lowcostvideo.Utils.DailyMotionUtils;
 import com.htetznaing.lowcostvideo.Core.GDrive2020;
 import com.htetznaing.lowcostvideo.Model.XModel;
@@ -79,6 +80,7 @@ public class LowCostVideo {
     private final String streamtape = "https?:\\/\\/(www\\.)?(streamtape\\.com)\\/(?:e|v)\\/([0-9a-zA-Z]+)";
     //private final String streamtape = "(?://|\\.)(streamtape\\.com)/(?:e|v)/([0-9a-zA-Z]+)";
     private final String vudeo = "https?:\\/\\/(www\\.)?(vudeo\\.net)\\/.+";
+    private final String zippy = "https?:\\/\\/(www.*\\.)(zippyshare\\.com)\\/.+";
 
     public LowCostVideo(@NonNull Context context){
         this.context=context;
@@ -138,7 +140,7 @@ public class LowCostVideo {
             Vlare.fetch(url,onComplete);
         }else if (check(vivoSX,url)){
             VivoSX.fetch(url,onComplete);
-//        }else if (check(streamKiwi,url)){
+ //       }else if (check(streamKiwi,url)){
 //            StreamKIWI.get(context,url,onComplete);
         }else if (check(bitTube,url)){
             BitTube.fetch(url,onComplete);
@@ -150,7 +152,11 @@ public class LowCostVideo {
             StreamTape.fetch(url,onComplete);
         }else if (check(vudeo,url)) {
             Vudeo.fetch(url, onComplete);
-        }else onComplete.onError();
+        }
+        else if (check(zippy,url)) {
+            Zippy.fetch(url, onComplete);
+        }
+        else onComplete.onError();
     }
 
     public interface OnTaskCompleted {

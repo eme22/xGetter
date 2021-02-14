@@ -28,7 +28,6 @@ public class StreamTape {
                     public void onResponse(String response) {
                         Log.d(LowCostVideo.TAG,response);
                         response = parseURL(response);
-                        //Log.d(LowCostVideo.TAG,response);
                         ArrayList<XModel> xModels = null;
                         if (response != null) {
                             xModels = parseVideo(response);
@@ -38,30 +37,7 @@ public class StreamTape {
                             onTaskCompleted.onError();
                         }else onTaskCompleted.onTaskCompleted(xModels, false);
 
-                        /*
-                        AndroidNetworking.get(response)
-                                .addHeaders(headers)
-                                .addHeaders("Referer", response)
-                                .build()
-                                .getAsString(new StringRequestListener() {
-                                    @Override
-                                    public void onResponse(String response) {
-                                        Log.d(LowCostVideo.TAG,response);
-                                        ArrayList<XModel> xModels = parseVideo(response);
-                                        if (xModels == null || xModels.isEmpty()){
-                                            onTaskCompleted.onError();
-                                        }else onTaskCompleted.onTaskCompleted(xModels, false);
-                                    }
-
-                                    @Override
-                                    public void onError(ANError anError) {
-                                        onTaskCompleted.onError();
-                                    }
-                                });
-
-                         */
                     }
-
                     @Override
                     public void onError(ANError anError) {
                         onTaskCompleted.onError();

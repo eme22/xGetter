@@ -77,11 +77,11 @@
                         android:layout_height="wrap_content" />
 
                     <Button
-                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:onClick="youtube"
                         android:text="Youtube"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:visibility="gone" />
                     <Button
                         android:onClick="vidozafiles"
                         android:text="Vidoza"
@@ -145,6 +145,12 @@
                     <Button
                         android:onClick="fourshared"
                         android:text="4Shared"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <Button
+                        android:onClick="zyppy"
+                        android:text="ZippyShare"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
                 </LinearLayout>

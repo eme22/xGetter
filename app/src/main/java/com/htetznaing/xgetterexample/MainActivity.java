@@ -681,4 +681,7 @@ public class MainActivity extends AppCompatActivity {
     public void vudeo(View view) {
         letGo("https://vudeo.net/azhfxfpzq6yq.html");
     }
+
+    public void zyppy(View view) { letGo("https://www68.zippyshare.com/v/z3ceYEDS/file.html"); }
+
 }

@@ -39,7 +39,7 @@ public class XModel implements Comparable<XModel>{
     @Override
     public int compareTo(XModel xModel) {
         if (startWithNumber(xModel.quality)){
-            return Integer.valueOf(quality.replaceAll("\\D+", "")) - Integer.valueOf(xModel.quality.replaceAll("\\D+", ""));
+            return Integer.parseInt(quality.replaceAll("\\D+", "")) - Integer.parseInt(xModel.quality.replaceAll("\\D+", ""));
         }
         return this.quality.length() - xModel.quality.length();
     }
