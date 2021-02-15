@@ -154,7 +154,7 @@ public class LowCostVideo {
             Vudeo.fetch(url, onComplete);
         }
         else if (check(zippy,url)) {
-            Zippy.fetch(url, onComplete);
+            Zippy.fetch(context,url, onComplete);
         }
         else onComplete.onError();
     }
