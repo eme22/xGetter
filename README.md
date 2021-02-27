@@ -1,4 +1,4 @@
-# xGetter => LowCostVideo [3.0] [FIX ATTEMPT 1]
+# xGetter => LowCostVideo [3.1]
 I change something to comply with Google play policy.
 - Remove external javascript file
 - Change the class name to LowCostVideo
@@ -49,6 +49,7 @@ I change something to comply with Google play policy.
 - **28. 4Shared**
 - **29. StreamTape**
 - **30. Vudeo**
+- **31. ZippyShare**
   
   
 တို့ပဲဖြစ်ပါတယ်။  
@@ -73,7 +74,7 @@ I change something to comply with Google play policy.
   
 
     dependencies {  
-	implementation 'com.github.eme22:xGetter:3.0fix2'
+	implementation 'com.github.eme22:xGetter:3.1'
     }
 
 **Android Studio** သမားတွေဆိုရင်တော့ **Sync Now** လုပ်ပေးပါ။  
