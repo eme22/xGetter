@@ -74,7 +74,7 @@ I change something to comply with Google play policy.
   
 
     dependencies {  
-	implementation 'com.github.eme22:xGetter:3.1'
+	implementation 'com.github.eme22:xGetter:3.1fix1'
     }
 
 **Android Studio** သမားတွေဆိုရင်တော့ **Sync Now** လုပ်ပေးပါ။  
