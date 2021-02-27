@@ -684,4 +684,5 @@ public class MainActivity extends AppCompatActivity {
 
     public void zyppy(View view) { letGo("https://www68.zippyshare.com/v/z3ceYEDS/file.html"); }
 
+    public void  mixdrop(View view) {letGo("https://mixdrop.co/e/dq4o09p9sgeqpo");}
 }

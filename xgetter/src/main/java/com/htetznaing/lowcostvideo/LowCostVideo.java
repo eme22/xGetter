@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import com.androidnetworking.AndroidNetworking;
 import com.htetznaing.lowcostvideo.Sites.BitTube;
 import com.htetznaing.lowcostvideo.Sites.MegaUp;
+import com.htetznaing.lowcostvideo.Sites.MixDrop;
 import com.htetznaing.lowcostvideo.Sites.StreamKIWI;
 import com.htetznaing.lowcostvideo.Sites.StreamTape;
 import com.htetznaing.lowcostvideo.Sites.VideoBIN;
@@ -81,6 +82,7 @@ public class LowCostVideo {
     //private final String streamtape = "(?://|\\.)(streamtape\\.com)/(?:e|v)/([0-9a-zA-Z]+)";
     private final String vudeo = "https?:\\/\\/(www\\.)?(vudeo\\.net)\\/.+";
     private final String zippy = "https?:\\/\\/(www.*\\.)(zippyshare\\.com)\\/.+";
+    private final String mixdrop = "https?:\\/\\/(mixdrop\\.co)\\/.+";
 
     public LowCostVideo(@NonNull Context context){
         this.context=context;
@@ -152,9 +154,10 @@ public class LowCostVideo {
             StreamTape.fetch(url,onComplete);
         }else if (check(vudeo,url)) {
             Vudeo.fetch(url, onComplete);
-        }
-        else if (check(zippy,url)) {
+        } else if (check(zippy,url)) {
             Zippy.fetch(context,url, onComplete);
+        } else if (check(mixdrop, url)){
+            MixDrop.fetch(context,url, onComplete);
         }
         else onComplete.onError();
     }
