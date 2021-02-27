@@ -101,7 +101,6 @@ public class Zippy {
 
     private static void destroyWebView() {
         if (webView!=null) {
-            webView.loadUrl("about:blank");
             webView.destroy();
         }
     }
