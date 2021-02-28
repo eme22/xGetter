@@ -14,6 +14,7 @@ public class MegaNZ {
     public static void fetch(String url, final LowCostVideo.OnTaskCompleted onComplete) {
         onTaskCompleted = onComplete;
         if (url.contains("/embed/")) url = url.replace("/embed/", "/file/");
+        else if (url.contains("/embed#!")) url = url.replace("/embed#!", "/file/");
         try
         {
             url = URLDecoder.decode(url, "utf-8");
