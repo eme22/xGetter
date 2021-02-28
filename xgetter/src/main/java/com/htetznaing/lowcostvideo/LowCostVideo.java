@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.androidnetworking.AndroidNetworking;
 import com.htetznaing.lowcostvideo.Sites.BitTube;
+import com.htetznaing.lowcostvideo.Sites.MegaNZ;
 import com.htetznaing.lowcostvideo.Sites.MegaUp;
 import com.htetznaing.lowcostvideo.Sites.MixDrop;
 import com.htetznaing.lowcostvideo.Sites.StreamKIWI;
@@ -79,10 +80,10 @@ public class LowCostVideo {
     private final String videoBIN = "https?:\\/\\/(www\\.)?(videobin\\.co)\\/.+";
     private final String fourShared = "https?:\\/\\/(www\\.)?(4shared\\.com)\\/(video|web\\/embed)\\/.+";
     private final String streamtape = "https?:\\/\\/(www\\.)?(streamtape\\.com)\\/(?:e|v)\\/([0-9a-zA-Z]+)";
-    //private final String streamtape = "(?://|\\.)(streamtape\\.com)/(?:e|v)/([0-9a-zA-Z]+)";
     private final String vudeo = "https?:\\/\\/(www\\.)?(vudeo\\.net)\\/.+";
     private final String zippy = "https?:\\/\\/(www.*\\.)(zippyshare\\.com)\\/.+";
     private final String mixdrop = "https?:\\/\\/(mixdrop\\.co)\\/.+";
+    private final String meganz = "https?:\\/\\/(mega\\.nz)\\/.+";
 
     public LowCostVideo(@NonNull Context context){
         this.context=context;
@@ -158,6 +159,8 @@ public class LowCostVideo {
             Zippy.fetch(context,url, onComplete);
         } else if (check(mixdrop, url)){
             MixDrop.fetch(context,url, onComplete);
+        } else if (check(meganz, url)){
+            MegaNZ.fetch(url, onComplete);
         }
         else onComplete.onError();
     }

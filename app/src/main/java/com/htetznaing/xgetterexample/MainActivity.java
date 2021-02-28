@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                         multipleQualityDialog(vidURL);
                     }else done(null);
                 }else {
-                   done(vidURL.get(0));
+                    done(vidURL.get(0));
                 }
             }
 
@@ -221,6 +221,13 @@ public class MainActivity extends AppCompatActivity {
         }
         MaterialStyledDialog.Builder builder = new MaterialStyledDialog.Builder(this);
         if (url!=null) {
+
+            if(url.contains("mega.nz")) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(browserIntent);
+                return;
+            }
+
             String finalUrl = url;
             builder.setTitle("Congratulations!")
                     .setDescription("Now,you can stream or download.")
@@ -685,4 +692,6 @@ public class MainActivity extends AppCompatActivity {
     public void zyppy(View view) { letGo("https://www68.zippyshare.com/v/z3ceYEDS/file.html"); }
 
     public void  mixdrop(View view) {letGo("https://mixdrop.co/e/dq4o09p9sgeqpo");}
+
+    public void meganz(View view) {letGo("https://mega.nz/file/8ss3iSwZ#ATj1hyI17G5PKLTYgEQ8DFIjHA8VAPe6g9jiKHMETpY");}
 }
