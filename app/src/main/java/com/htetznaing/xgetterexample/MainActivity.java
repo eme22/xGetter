@@ -222,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
         MaterialStyledDialog.Builder builder = new MaterialStyledDialog.Builder(this);
         if (url!=null) {
 
-            if(xModel.getQuality().equals("Mega")) {
+            if(url.contains("mega.nz")) {
                 boolean appInstalledOrNot = appInstalledOrNot( "mega.privacy.android.app");
                 if (appInstalledOrNot){
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW);
