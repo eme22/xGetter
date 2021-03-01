@@ -222,10 +222,20 @@ public class MainActivity extends AppCompatActivity {
         MaterialStyledDialog.Builder builder = new MaterialStyledDialog.Builder(this);
         if (url!=null) {
 
-            if(url.contains("mega.nz")) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(browserIntent);
-                return;
+            if(xModel.getQuality().equals("Mega")) {
+                boolean appInstalledOrNot = appInstalledOrNot( "mega.privacy.android.app");
+                if (appInstalledOrNot){
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+                    //browserIntent.setDataAndType(Uri.parse(url), "mega");
+                    browserIntent.setData(Uri.parse(url));
+                    browserIntent.setPackage("mega.privacy.android.app");
+                    startActivity(browserIntent);
+                    return;
+                }
+                else {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+                    return;
+                }
             }
 
             String finalUrl = url;
@@ -242,14 +252,12 @@ public class MainActivity extends AppCompatActivity {
                         }
                     })
                     .setNeutralText("Copy")
-                    .onNeutral(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                            clipboardManager.setText(xModel.getUrl());
-                            if (clipboardManager.hasText()){
-                                Toast.makeText(MainActivity.this, "Copied", Toast.LENGTH_SHORT).show();
-                            }
+                    .onNeutral((dialog, which) ->
+                    {
+                        ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                        clipboardManager.setText(xModel.getUrl());
+                        if (clipboardManager.hasText()){
+                            Toast.makeText(MainActivity.this, "Copied", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .setNegativeText("Download")
