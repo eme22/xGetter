@@ -22,6 +22,7 @@ import com.htetznaing.lowcostvideo.Sites.GoUnlimited;
 import com.htetznaing.lowcostvideo.Sites.Muvix;
 import com.htetznaing.lowcostvideo.Sites.VideoBM;
 import com.htetznaing.lowcostvideo.Sites.Vudeo;
+import com.htetznaing.lowcostvideo.Sites.Yu;
 import com.htetznaing.lowcostvideo.Sites.Zippy;
 import com.htetznaing.lowcostvideo.Utils.DailyMotionUtils;
 import com.htetznaing.lowcostvideo.Core.GDrive2020;
@@ -84,6 +85,7 @@ public class LowCostVideo {
     private final String zippy = "https?:\\/\\/(www.*\\.)(zippyshare\\.com)\\/.+";
     private final String mixdrop = "https?:\\/\\/(mixdrop\\.co)\\/.+";
     private final String meganz = "https?:\\/\\/(mega\\.nz)\\/.+";
+    private final String yu = "https?:\\/\\/(www\\.)?(yourupload\\.com)\\/.+";
 
     public LowCostVideo(@NonNull Context context){
         this.context=context;
@@ -161,6 +163,8 @@ public class LowCostVideo {
             MixDrop.fetch(context,url, onComplete);
         } else if (check(meganz, url)){
             MegaNZ.fetch(url, onComplete);
+        } else if (check(yu, url)){
+            Yu.fetch(url, onComplete);
         }
         else onComplete.onError();
     }

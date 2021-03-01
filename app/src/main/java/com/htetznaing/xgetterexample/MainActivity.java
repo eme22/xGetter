@@ -226,7 +226,6 @@ public class MainActivity extends AppCompatActivity {
                 boolean appInstalledOrNot = appInstalledOrNot( "mega.privacy.android.app");
                 if (appInstalledOrNot){
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW);
-                    //browserIntent.setDataAndType(Uri.parse(url), "mega");
                     browserIntent.setData(Uri.parse(url));
                     browserIntent.setPackage("mega.privacy.android.app");
                     startActivity(browserIntent);
