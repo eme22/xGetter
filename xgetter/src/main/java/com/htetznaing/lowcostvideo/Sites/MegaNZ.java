@@ -39,7 +39,7 @@ public class MegaNZ {
             ArrayList<XModel> xModels = new ArrayList<>();
             XModel model = new XModel();
             model.setUrl(result);
-            model.setQuality("Mega");
+            model.setQuality("Normal");
             xModels.add(model);
             onTaskCompleted.onTaskCompleted(xModels, false);
         } else onTaskCompleted.onError();
