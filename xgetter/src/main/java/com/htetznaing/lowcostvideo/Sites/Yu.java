@@ -12,6 +12,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,7 +27,7 @@ public class Yu {
                 .getAsString(new StringRequestListener() {
                     @Override
                     public void onResponse(String response) {
-                        ArrayList<XModel> xModels = parse(response);
+                        ArrayList<XModel> xModels = parse(response, url);
                         if (xModels!=null){
                             onComplete.onTaskCompleted(xModels,false);
                         }else onComplete.onError();
@@ -38,12 +40,13 @@ public class Yu {
                 });
     }
 
-    private static ArrayList<XModel> parse(String response){
+    private static ArrayList<XModel> parse(String response, String referer){
         String src = getUrl(response);
         if (null!=src){
             XModel xModel = new XModel();
             xModel.setUrl(src);
             xModel.setQuality("Normal");
+            xModel.setHeaders(new HashMap<String, String>() {{ put("Referer", referer); }});
             ArrayList<XModel> xModels = new ArrayList<>();
             xModels.add(xModel);
             return xModels;

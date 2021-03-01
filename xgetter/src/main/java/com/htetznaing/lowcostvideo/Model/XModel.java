@@ -1,10 +1,17 @@
 package com.htetznaing.lowcostvideo.Model;
 
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class XModel implements Comparable<XModel>{
     String quality,url,cookie;
+
+    HashMap<String, String> headers;
+
+    public HashMap<String, String> getHeaders() { return headers; }
+
+    public void setHeaders(HashMap<String, String> headers) { this.headers = headers; }
 
     public String getQuality() {
         return quality;
@@ -25,6 +32,7 @@ public class XModel implements Comparable<XModel>{
     public String getCookie() {
         return cookie;
     }
+
 
     public void setCookie(String cookie) {
         this.cookie = cookie;
