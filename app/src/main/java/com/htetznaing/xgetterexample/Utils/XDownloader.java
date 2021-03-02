@@ -19,7 +19,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
 
@@ -54,6 +56,14 @@ public class XDownloader {
             //If google drive you need to set cookie
             if (xModel.getCookie()!=null){
                 mRequest.addRequestHeader("cookie", xModel.getCookie());
+            }
+
+            //Some servers may need extra headers
+            if (xModel.getHeaders()!=null){
+                HashMap<String,String> headers = xModel.getHeaders();
+                for (Map.Entry<String, String> header: headers.entrySet()) {
+                    mRequest.addRequestHeader(header.getKey()  , header.getValue());
+                }
             }
 
             mRequest.setMimeType("video/*");

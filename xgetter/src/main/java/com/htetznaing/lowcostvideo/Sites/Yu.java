@@ -5,19 +5,11 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.StringRequestListener;
 import com.htetznaing.lowcostvideo.LowCostVideo;
 import com.htetznaing.lowcostvideo.Model.XModel;
-import com.htetznaing.lowcostvideo.Utils.Utils;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static com.htetznaing.lowcostvideo.Utils.Utils.sortMe;
 
 public class Yu {
     public static void fetch(String url, final LowCostVideo.OnTaskCompleted onComplete){

@@ -45,7 +45,9 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 public class MainActivity extends AppCompatActivity {
@@ -273,12 +275,7 @@ public class MainActivity extends AppCompatActivity {
                     .setIcon(R.drawable.wrong)
                     .withDialogAnimation(true)
                     .setPositiveText("OK")
-                    .onPositive(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            dialog.dismiss();
-                        }
-                    });
+                    .onPositive((dialog, which) -> dialog.dismiss());
         }
         MaterialStyledDialog dialog = builder.build();
         dialog.show();
@@ -303,19 +300,9 @@ public class MainActivity extends AppCompatActivity {
                 .setIcon(R.drawable.right)
                 .withDialogAnimation(true)
                 .setPositiveText("Own Exoplayer")
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        watchVideo(xModel);
-                    }
-                })
+                .onPositive((dialog, which) -> watchVideo(xModel))
                 .setNegativeText("MXPlayer")
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        openWithMXPlayer(xModel);
-                    }
-                });
+                .onNegative((dialog, which) -> openWithMXPlayer(xModel));
         MaterialStyledDialog dialog = builder.build();
         dialog.show();
     }
@@ -328,19 +315,9 @@ public class MainActivity extends AppCompatActivity {
                 .setIcon(R.drawable.right)
                 .withDialogAnimation(true)
                 .setPositiveText("Built in downloader")
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        downloadFile(xModel);
-                    }
-                })
+                .onPositive((dialog, which) -> downloadFile(xModel))
                 .setNegativeText("ADM")
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        downloadWithADM(xModel);
-                    }
-                });
+                .onNegative((dialog, which) -> downloadWithADM(xModel));
         MaterialStyledDialog dialog = builder.build();
         dialog.show();
     }
@@ -569,7 +546,18 @@ public class MainActivity extends AppCompatActivity {
                 intent.setPackage(str2);
                 intent.setClassName(str2, str3);
                 if (xModel.getCookie() != null) {
-                    intent.putExtra("headers", new String[]{"cookie", xModel.getCookie()});
+                    if (xModel.getHeaders() != null) {
+                        HashMap<String,String> headers = xModel.getHeaders();
+                        ArrayList<String> list = new ArrayList<>();
+                        for (Map.Entry<String, String> header: headers.entrySet()) {
+                            list.add(header.getKey());
+                            list.add(header.getValue());
+                        }
+                        list.add("cookie");
+                        list.add(xModel.getCookie());
+                        intent.putExtra("headers", list.toArray(new String[]{}));
+                    }
+                    else intent.putExtra("headers", new String[]{"cookie", xModel.getCookie()});
                     intent.putExtra("secure_uri", true);
                 }
                 startActivity(intent);
@@ -633,6 +621,14 @@ public class MainActivity extends AppCompatActivity {
                         if (xModel.getCookie() != null) {
                             connection.setRequestProperty("Cookie", xModel.getCookie());
                         }
+
+                        if (xModel.getHeaders()!=null){
+                            HashMap<String,String> headers = xModel.getHeaders();
+                            for (Map.Entry<String, String> header: headers.entrySet()) {
+                                connection.setRequestProperty(header.getKey()  , header.getValue());
+                            }
+                        }
+
                         connection.connect();
                         String s = calculateFileSize(connection.getContentLength());
                         System.out.println(xModel.getUrl()+" => File Size: "+s+"\nCookie => "+xModel.getCookie());
@@ -701,4 +697,6 @@ public class MainActivity extends AppCompatActivity {
     public void  mixdrop(View view) {letGo("https://mixdrop.co/e/dq4o09p9sgeqpo");}
 
     public void meganz(View view) {letGo("https://mega.nz/file/8ss3iSwZ#ATj1hyI17G5PKLTYgEQ8DFIjHA8VAPe6g9jiKHMETpY");}
+
+    public void  yu(View view) {letGo("https://www.yourupload.com/embed/6CW43CN2aEBx");}
 }
