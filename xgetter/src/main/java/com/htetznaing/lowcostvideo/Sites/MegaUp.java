@@ -89,13 +89,11 @@ public class MegaUp {
         @SuppressWarnings("unused")
         @JavascriptInterface
         public void error(final String error) {
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    destroyWebView();
-                    stopMMHandler = true;
-                    result(null);
-                }
+            new Handler(Looper.getMainLooper()).post(() ->
+            {
+                destroyWebView();
+                stopMMHandler = true;
+                result(null);
             });
         }
     }

@@ -15,13 +15,13 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class StreamTape {
+import static com.htetznaing.lowcostvideo.LowCostVideo.agent;
 
-    private static final Map<String,String> headers = Collections.singletonMap("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.66");
+public class StreamTape {
 
     public static void fetch(String url, final LowCostVideo.OnTaskCompleted onTaskCompleted){
         AndroidNetworking.get(url)
-                .addHeaders(headers)
+                .addHeaders("User-agent", agent)
                 .build()
                 .getAsString(new StringRequestListener() {
                     @Override

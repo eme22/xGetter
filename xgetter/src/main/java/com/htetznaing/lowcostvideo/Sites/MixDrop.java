@@ -16,8 +16,11 @@ import com.htetznaing.lowcostvideo.Model.XModel;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import static com.htetznaing.lowcostvideo.LowCostVideo.agent;
 
 public class MixDrop {
 
@@ -38,10 +41,11 @@ public class MixDrop {
 
         webView = new WebView(context);
         webView.getSettings().setJavaScriptEnabled(true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            webView.getSettings().setMediaPlaybackRequiresUserGesture(false);
-        }
-        webView.getSettings().setUserAgentString("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36 Edg/88.0.705.74");
+        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        //    webView.getSettings().setMediaPlaybackRequiresUserGesture(false);
+        //}
+        //webView.getSettings().setUserAgentString("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36 Edg/88.0.705.74");
+        webView.getSettings().setUserAgentString(agent);
         webView.addJavascriptInterface(new MyInterface(),"xGetter");
         webView.setWebViewClient(new WebViewClient(){
             @Override
@@ -50,32 +54,50 @@ public class MixDrop {
                 Log.d(LowCostVideo.TAG, "FIND");
                 findMe();
             }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (!url.contains("mxdcontent")) return false;
+                Log.d(LowCostVideo.TAG, "START DOWNLOAD");
+                destroyWebView();
+                result(url);
+                return true;
+            }
         });
 
 
 
+        /*
         webView.setDownloadListener((url1, userAgent, contentDisposition, mimetype, contentLength) ->
         {
             Log.d(LowCostVideo.TAG, "START DOWNLOAD");
             destroyWebView();
             result(url1);
         });
+        */
 
 
-        String finalUrl = url;
-        webView.loadUrl(url,new HashMap<String, String>() {{
-            put("Referer", finalUrl);
-            put("Origin", finalUrl);
-        }});
+        HashMap<String, String> headerMap = new HashMap<>();
+        headerMap.put("Referer", url);
+        headerMap.put("Origin", url);
+        webView.loadUrl(url,headerMap);
     }
 
+    @SuppressWarnings("all")
     private static String decodeBase64(String coded){
-        try {
-            return new String(Base64.decode(coded.getBytes("UTF-8"), Base64.DEFAULT));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            return new String(Base64.decode(coded.getBytes(StandardCharsets.UTF_8), Base64.DEFAULT));
         }
-        return null;
+        else{
+            try {
+                return new String(Base64.decode(coded.getBytes("UTF-8"), Base64.DEFAULT));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 
     private static void findMe() {
@@ -91,8 +113,9 @@ public class MixDrop {
         }
     }
 
-    private static final String getJs() {
-        return "dmFyIGludGVydmFsID0gc2V0SW50ZXJ2YWwoZnVuY3Rpb24oKSB7CiAgICB2YXIgZWxlbSA9IGRvY3VtZW50LmdldEVsZW1lbnRzQnlDbGFzc05hbWUoInZqcy1iaWctcGxheS1idXR0b24iKVswXTsKCWlmICh0eXBlb2YgZWxlbSA9PSAndW5kZWZpbmVkJykgcmV0dXJuOwogICAgY2xlYXJJbnRlcnZhbChpbnRlcnZhbCk7CgllbGVtLmNsaWNrKCk7Cgl2YXIgaW50ZXJ2YWwyID0gc2V0SW50ZXJ2YWwoZnVuY3Rpb24oKSB7CgkJdmFyIHZpZGVvID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ3ZpZGVvanNfaHRtbDVfYXBpJyk7CgkJaWYgKHR5cGVvZiB2aWRlby5zcmMgPT0gJ3VuZGVmaW5lZCcpIHJldHVybjsKCQljbGVhckludGVydmFsKGludGVydmFsMik7CgkJeEdldHRlci5sb2FkKHZpZGVvLnNyYykKCX0sIDEwKTsKfSwgMTApOw==";
+    private static String getJs() {
+        //return "dmFyIGludGVydmFsID0gc2V0SW50ZXJ2YWwoZnVuY3Rpb24oKSB7CiAgICB2YXIgZWxlbSA9IGRvY3VtZW50LmdldEVsZW1lbnRzQnlDbGFzc05hbWUoInZqcy1iaWctcGxheS1idXR0b24iKVswXTsKCWlmICh0eXBlb2YgZWxlbSA9PSAndW5kZWZpbmVkJykgcmV0dXJuOwogICAgY2xlYXJJbnRlcnZhbChpbnRlcnZhbCk7CgllbGVtLmNsaWNrKCk7Cgl2YXIgaW50ZXJ2YWwyID0gc2V0SW50ZXJ2YWwoZnVuY3Rpb24oKSB7CgkJdmFyIHZpZGVvID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ3ZpZGVvanNfaHRtbDVfYXBpJyk7CgkJaWYgKHR5cGVvZiB2aWRlby5zcmMgPT0gJ3VuZGVmaW5lZCcpIHJldHVybjsKCQljbGVhckludGVydmFsKGludGVydmFsMik7CgkJeEdldHRlci5sb2FkKHZpZGVvLnNyYykKCX0sIDEwKTsKfSwgMTApOw==";
+        return "dmFyIGludGVydmFsID0gc2V0SW50ZXJ2YWwoZnVuY3Rpb24oKSB7CiAgICB2YXIgZWxlbSA9IGRvY3VtZW50LmdldEVsZW1lbnRzQnlDbGFzc05hbWUoInZqcy1iaWctcGxheS1idXR0b24iKVswXTsKCWlmICh0eXBlb2YgZWxlbSA9PSAndW5kZWZpbmVkJykgcmV0dXJuOwogICAgY2xlYXJJbnRlcnZhbChpbnRlcnZhbCk7CgllbGVtLmNsaWNrKCk7Cgl2YXIgaW50ZXJ2YWwyID0gc2V0SW50ZXJ2YWwoZnVuY3Rpb24oKSB7CgkJdmFyIHZpZGVvID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ3ZpZGVvanNfaHRtbDVfYXBpJyk7CgkJaWYgKHR5cGVvZiB2aWRlby5zcmMgPT0gJ3VuZGVmaW5lZCcpIHJldHVybjsKCQljbGVhckludGVydmFsKGludGVydmFsMik7CgkJd2luZG93LmxvY2F0aW9uLmhyZWYgPSB2aWRlby5zcmM7Cgl9LCAxMCk7Cn0sIDEwKTs=";
     }
 
     private static void result(String result) {
@@ -125,6 +148,7 @@ public class MixDrop {
                 result(null);
             });
         }
+        /*
 
         @JavascriptInterface
         public void load(final String url) {
@@ -135,5 +159,7 @@ public class MixDrop {
                 result(url);
             });
         }
+
+         */
     }
 }
