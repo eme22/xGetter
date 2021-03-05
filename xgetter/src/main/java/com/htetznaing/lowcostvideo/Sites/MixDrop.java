@@ -31,8 +31,7 @@ public class MixDrop {
     public static void fetch(Context context, String url, final LowCostVideo.OnTaskCompleted onDone ) {
         onTaskCompleted = onDone;
 
-        try
-        {
+        try {
             url = URLDecoder.decode(url, "utf-8");
         } catch (UnsupportedEncodingException e)
         {
