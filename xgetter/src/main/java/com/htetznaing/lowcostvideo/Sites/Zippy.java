@@ -49,17 +49,8 @@ public class Zippy {
             }
         });
 
-        String finalUrl = url;
         webView.setDownloadListener((url1, userAgent, contentDisposition, mimetype, contentLength) ->
         {
-            Log.d(LowCostVideo.TAG, url1);
-            Log.d(LowCostVideo.TAG, finalUrl);
-
-            if (url1.equals(finalUrl)) {
-                destroyWebView();
-                onTaskCompleted.onError();
-                return;
-            }
             Log.d(LowCostVideo.TAG, "START DOWNLOAD");
             destroyWebView();
             result(url1);
@@ -108,7 +99,7 @@ public class Zippy {
     {
         destroyWebView();
         System.out.println("Fucked: " + result);
-        if (result != null && !result.isEmpty()) {
+        if (result != null && !result.isEmpty() && !result.contains("/file.html")) {
             ArrayList<XModel> xModels = new ArrayList<>();
             XModel model = new XModel();
             model.setUrl(result);
