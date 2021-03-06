@@ -2,6 +2,7 @@ package com.htetznaing.lowcostvideo.Sites;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.nfc.Tag;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -51,7 +52,11 @@ public class Zippy {
         String finalUrl = url;
         webView.setDownloadListener((url1, userAgent, contentDisposition, mimetype, contentLength) ->
         {
+            Log.d(LowCostVideo.TAG, url1);
+            Log.d(LowCostVideo.TAG, finalUrl);
+
             if (url1.equals(finalUrl)) {
+                destroyWebView();
                 onTaskCompleted.onError();
                 return;
             }
