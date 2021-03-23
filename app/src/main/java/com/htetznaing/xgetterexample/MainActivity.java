@@ -700,4 +700,6 @@ public class MainActivity extends AppCompatActivity {
     public void meganz(View view) {letGo("https://mega.nz/file/8ss3iSwZ#ATj1hyI17G5PKLTYgEQ8DFIjHA8VAPe6g9jiKHMETpY");}
 
     public void  yu(View view) {letGo("https://www.yourupload.com/embed/6CW43CN2aEBx");}
+
+    public void gocdn(View view){letGo("https://streamium.xyz/gocdn.html#ak9sNjZWNFM4ZDRIblAzdzB0c3ZPTHZ1cXdsb3MyZHRpWVQrNy8wMUxlU2R4YWJFSWF4enZjOGdmT2NhbUYzRTBrdXZWYURLTVVLSHplUmFWZk15WHZIcVpBcmI3KzVzMEg5YWREalBpTk9wQXdQalpMQVRYNk5ud1U1elIrTUh1R0hwbGFVTS84UlhHU1NiU01KWDBBPT0=");}
 }

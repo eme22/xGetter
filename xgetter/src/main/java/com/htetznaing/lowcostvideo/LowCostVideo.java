@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.androidnetworking.AndroidNetworking;
 import com.htetznaing.lowcostvideo.Sites.BitTube;
+import com.htetznaing.lowcostvideo.Sites.GoCDN;
 import com.htetznaing.lowcostvideo.Sites.MegaNZ;
 import com.htetznaing.lowcostvideo.Sites.MegaUp;
 import com.htetznaing.lowcostvideo.Sites.MixDrop;
@@ -86,6 +87,7 @@ public class LowCostVideo {
     private final String mixdrop = "https?:\\/\\/(mixdrop\\.co)\\/.+";
     private final String meganz = "https?:\\/\\/(mega\\.nz)\\/.+";
     private final String yu = "https?:\\/\\/(www\\.)?(yourupload\\.com)\\/.+";
+    private final String gocdn = "https?:\\/\\/(www\\.)?(streamium\\.xyz)\\/gocdn.+";
 
     public LowCostVideo(@NonNull Context context){
         this.context=context;
@@ -165,6 +167,8 @@ public class LowCostVideo {
             MegaNZ.fetch(url, onComplete);
         } else if (check(yu, url)){
             Yu.fetch(url, onComplete);
+        } else if (check(gocdn,url)){
+            GoCDN.fetch(url,onComplete);
         }
         else onComplete.onError();
     }

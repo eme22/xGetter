@@ -159,6 +159,12 @@
                         android:text="Mega NZ (Wrapper)"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
+
+                    <Button
+                        android:onClick="gocdn"
+                        android:text="Streamium / GoCDN"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
 
                 <LinearLayout
