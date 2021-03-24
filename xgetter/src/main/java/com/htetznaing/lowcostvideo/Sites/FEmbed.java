@@ -34,7 +34,9 @@ public class FEmbed {
                         public void onResponse(String response) {
                             ArrayList<XModel> xModels = parse(response);
                             if (xModels!=null){
+                                if (xModels.size() > 1)
                                 onComplete.onTaskCompleted(sortMe(xModels),true);
+                                else onComplete.onTaskCompleted(xModels,false);
                             }else onComplete.onError();
                         }
 
